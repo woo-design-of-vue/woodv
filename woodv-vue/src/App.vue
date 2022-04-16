@@ -91,7 +91,14 @@
           </w-checkbox>
         </w-checkbox-group>
       </div>
-    </div>
+      <div class="rate" style="margin-top: 16px;">
+        <w-rate v-model="rate" color="pink" text="menu" size="32" allowHalf></w-rate>
+      </div>
+
+      <div class="textarea" style="margin-top: 16px;">
+        <w-textarea v-model="textarea" rows="10"></w-textarea>
+      </div>
+    </div>.
   </div>
 </template>
 
@@ -101,14 +108,22 @@ export default {
   name: 'App',
   data(){
     return{
-      value:"",
+      value:"d1as23d1sa32d",
       checkbox:false,
-      checkboxGroup:[1]
+      checkboxGroup:[1],
+      rate:0,
+      textarea:"123456"
     }
   },
   watch:{
+    rate(value){
+      console.log(value,"rate")
+    },
     value(value){
-      console.log(value,99999)
+      console.log(value,"input")
+    },
+    textarea(value){
+      console.log(value,"textarea")
     }
   },
   methods:{
@@ -125,8 +140,11 @@ export default {
       console.log(e,"prependClick")
     },
     checkboxChange(e){
-      console.log(e,"checkbox")
-      this.checkboxGroup = [1,2,3]
+      console.log(e,"checkbox");
+      this.value = "as1d3sa2d1";
+      this.checkboxGroup = [1,2,3];
+      this.rate = 4
+      this.textarea = "951357"
     },
     checkboxGroupChange(e){
       console.log(e,"checkboxGroup")

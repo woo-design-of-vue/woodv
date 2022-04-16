@@ -4,6 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+require("material-design-icons-iconfont");
+
 var _default2 = {
   name: "WCheckboxGroup",
   model: {

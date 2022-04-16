@@ -65,6 +65,7 @@ var _default = {
           "woo-input-disabled": this.disabled
         },
         attrs: {
+          value: this.value,
           placeholder: this.placeholder,
           type: this.type,
           disabled: this.disabled

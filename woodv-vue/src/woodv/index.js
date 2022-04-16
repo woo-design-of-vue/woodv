@@ -17,9 +17,13 @@ var _button = _interopRequireDefault(require("./components/button"));
 
 var _checkboxGroup = _interopRequireDefault(require("./components/checkbox-group"));
 
+var _rate = _interopRequireDefault(require("./components/rate"));
+
+var _textarea = _interopRequireDefault(require("./components/textarea"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const components = [_input.default, _icon.default, _button.default, _checkbox.default, _checkboxGroup.default];
+const components = [_input.default, _icon.default, _button.default, _checkbox.default, _checkboxGroup.default, _rate.default, _textarea.default];
 
 var _default = Vue => {
   components.map(item => {

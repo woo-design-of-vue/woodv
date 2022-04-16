@@ -1,5 +1,6 @@
+import "material-design-icons-iconfont";
 export default {
-    name:"WCheckboxGroup", 
+    name:"WCheckboxGroup",
     model:{
         props: "value",
         event:"change"
