@@ -111,7 +111,7 @@ export default {
                                             type:"checkbox",
                                             value:this.value,
                                             disabled: this.disabled || this.provideDisabled,
-                                            checked:this.provideValue.value.includes(this.value)
+                                            checked:this.provideIsItem?this.provideValue.value.includes(this.value):this.model
                                         },
                                         style:{
                                             position:"absolute",
