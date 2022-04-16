@@ -1,3 +1,4 @@
+import "material-design-icons-iconfont";
 export default {
     name:"WCheckboxGroup",
     model:{
