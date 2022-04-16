@@ -1,7 +1,7 @@
 export default {
     name:"WCheckboxGroup",
     model:{
-        props: "value",
+        props: "value", 
         event:"change"
     },
     data(){
