@@ -56,7 +56,7 @@
         <w-btn type="danger" size="mini" block link>
           123456
         </w-btn>
-        <w-btn icon link @click="search">
+        <w-btn icon link @click="checkbox = true">
           <w-icon>
             search
           </w-icon>
@@ -70,7 +70,7 @@
         </w-checkbox>
       </div>
       <div class="checkbox-group" style="margin-top: 24px;">
-        <w-checkbox-group disabled color="pink" v-model="checkboxGroup" @change="checkboxGroupChange">
+        <w-checkbox-group color="pink" v-model="checkboxGroup" @change="checkboxGroupChange">
           <w-checkbox color="blue" :value="1">
             1
           </w-checkbox>
