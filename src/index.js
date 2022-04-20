@@ -7,7 +7,8 @@ import Button from "./components/button";
 import CheckboxGroup from "./components/checkbox-group";
 import Rate from "./components/rate";
 import Textarea from "./components/textarea";
-const components = [Input, Icon, Button, Checkbox, CheckboxGroup, Rate, Textarea];
+import Table from "./components/table";
+const components = [Input, Icon, Button, Checkbox, CheckboxGroup, Rate, Textarea, Table];
 
 export default (Vue)=> {
     components.map(item=>{

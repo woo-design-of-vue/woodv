@@ -1,0 +1,111 @@
+.woo-table-group-fixed-start{
+    .woo-table-fixed-start{
+        &:after{
+            box-shadow: inset 10px 0 8px -8px #00000026;
+            position: absolute;
+            top: 0;
+            right: -60px;
+            bottom: 0;
+            width: 30px;
+            transform: translate(-100%);
+            transition: box-shadow .3s;
+            content: "";
+            pointer-events: none;
+        }
+    }
+}
+.woo-table-group-fixed-end{
+    .woo-table-fixed-end{
+        &:after{
+            box-shadow: inset -10px 0 8px -8px #00000026;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            transform: translate(-100%);
+            transition: box-shadow .3s;
+            content: "";
+            pointer-events: none;
+        }
+    }
+}
+.woo-table-group{
+    width: 100%;
+    overflow: auto;
+    .woo-table{
+        width: 100%;
+        background-color: #fff;
+        color: #666;
+        table-layout: fixed;
+        tr{
+            background-color: #ffffff;
+            th{
+                position: relative;
+                padding: 5px 10px;
+                min-height: 20px;
+                line-height: 20px;
+                font-size: 14px;
+                border: 1px solid #eee;
+                border-left: none;
+                font-weight: 400;
+                &:first-child{
+                    border-left: 1px solid #eee;
+                }
+            }
+            td{
+                position: relative;
+                padding: 5px 10px;
+                min-height: 20px;
+                line-height: 20px;
+                font-size: 14px;
+                border: 1px solid #eee;
+                border-left: none;
+                border-top: none;
+                &:first-child{
+                    border-left: 1px solid #eee;
+                }
+            }
+        }
+    }
+    .woo-table-header{
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        tr{
+            background-color: #FAFAFA;
+            .woo-table-fixed-start{
+                background-color: #FAFAFA;
+                z-index: 1;
+            }
+            .woo-table-fixed-end{
+                background-color: #FAFAFA;
+                z-index: 1;
+            }
+        }
+
+    }
+    .woo-table-body{
+        tr{
+            &:hover{
+                td{
+                    background-color: #FAFAFA;
+                }
+            }
+            .woo-table-fixed-start{
+                background-color: #ffffff;
+                z-index: 1;
+            }
+            .woo-table-fixed-end{
+                background-color: #ffffff;
+                z-index: 1;
+            }
+        }
+
+    }
+    .woo-table-ellipsis{
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+}
