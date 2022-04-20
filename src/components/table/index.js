@@ -146,8 +146,8 @@ export default {
                     "woo-table-group-fixed-end":fixedHeadEndVisible
                 },
                 style:{
-                    width:this.width,
-                    height: this.height
+                    maxWidth:this.width,
+                    maxHeight: this.height
                 },
                 on:{
                     load:(e)=>{
