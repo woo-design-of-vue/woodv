@@ -21,9 +21,11 @@ var _rate = _interopRequireDefault(require("./components/rate"));
 
 var _textarea = _interopRequireDefault(require("./components/textarea"));
 
+var _table = _interopRequireDefault(require("./components/table"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const components = [_input.default, _icon.default, _button.default, _checkbox.default, _checkboxGroup.default, _rate.default, _textarea.default];
+const components = [_input.default, _icon.default, _button.default, _checkbox.default, _checkboxGroup.default, _rate.default, _textarea.default, _table.default];
 
 var _default = Vue => {
   components.map(item => {
