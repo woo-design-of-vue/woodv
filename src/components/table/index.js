@@ -1,169 +1,102 @@
-import tableRender from "../../util/function/tableRender";
+
+import tableHeaderColumns from "../../util/function/tableHeaderColumns";
+import tableBodyColumns from "../../util/function/tableBodyColumns";
 export default {
-    name:"WTable",
-    props:{
-        columns:{
-            type:Array,
-            required:true,
-            default:()=>{
+    name: "WTable",
+    props: {
+        columns: {
+            type: Array,
+            required: true,
+            default: () => {
+                // {
+                //     dataIndex: "name",
+                //         title: "姓名",
+                //     width: "200px",
+                //     align: "left",
+                //     slots: "slots",
+                //     render: (text,row,index,config) => {
+                // },
+                //     fixed: "start"
+                // }
                 return [];
             }
         },
-        dataSource:{
-            type:Array,
-            required:true,
-            default:()=>{
+        dataSource: {
+            type: Array,
+            required: true,
+            default: () => {
                 return [];
             }
         },
         width: {
-            type:[String, Number],
-            required:true,
-            default:""
+            type: [String, Number],
+            required: false,
+            default: ""
         },
         height: {
-            type:[String, Number],
-            required:true,
-            default:""
+            type: [String, Number],
+            required: false,
+            default: ""
+        },
+        rowKey: {
+            type: String,
+            required: false,
+            default: "id"
+        },
+        targetClass: {
+            type: String,
+            required: false,
+            default: ""
         }
     },
-    methods:{
+    mounted() {
+        const tableGroupNode = this.$refs["woo-table-group"];
 
+        if (tableGroupNode.scrollLeft > 0) {
+            tableGroupNode.classList.add("woo-table-group-fixed-start");
+        }
+        if (tableGroupNode.scrollLeft <= 0) {
+            tableGroupNode.classList.remove("woo-table-group-fixed-start");
+        }
+        if (tableGroupNode.scrollWidth - tableGroupNode.scrollLeft - tableGroupNode.offsetWidth) {
+            tableGroupNode.classList.add("woo-table-group-fixed-end");
+        }
+        if (tableGroupNode.scrollWidth - tableGroupNode.scrollLeft - tableGroupNode.offsetWidth <= 0) {
+            tableGroupNode.classList.remove("woo-table-group-fixed-end");
+        }
     },
-    render:function (h) {
-        const colgroupList = [];
-        const tableHeader =  h(
-            "tr",
-            {
-                "woo-table-tr":true
-            },
-            []
-        );
-        const tableList = [];
-        let fixedHeadStartWidth = 0;
-        let fixedHeadEndWidth = 0;
-        let fixedHeadEndVisible = false;
-
-        for(const index in this.dataSource){
-            let fixedBodyStartWidth = 0;
-            let fixedBodyEndWidth = 0;
-            const item = this.dataSource[index];
-            const tableNode = h(
-                "tr",
-                {
-                    class:{
-                        "woo-table-tr":true
-                    }
-                },
-                []
-            );
-
-            for(const childIndex in this.columns){
-                const child = this.columns[childIndex];
-                const childNode = h(
-                    "td",
-                    {
-                        class:{
-                            "woo-table-th":true,
-                            "woo-table-ellipsis":child.ellipsis,
-                            "woo-table-fixed-start":child.fixed ==="start",
-                            "woo-table-fixed-end":child.fixed ==="end"
-                        },
-                        style:{
-                            textAlign:child.align,
-                            position:child.fixed?"sticky":"",
-                            left:child.fixed ==="start"?fixedBodyStartWidth:"",
-                            right:child.fixed ==="end"?fixedBodyEndWidth:""
-                        }
-                    },
-                    tableRender(item[child.dataIndex], item, index, child, this.$scopedSlots)
-                );
-
-                if(child.fixed === "start"){
-                    fixedBodyStartWidth += child.width || 100;
-                }
-                if(child.fixed === "end"){
-                    fixedBodyEndWidth += child.width || 100;
-                }
-                tableNode.children.push(childNode);
-            }
-            tableList.push(tableNode);
-        }
-
-
-
-        for(const index in this.columns){
-            const item = this.columns[index];
-
-            colgroupList.push(h(
-                "col",
-                {
-                    "woo-table-th":true,
-                    attrs:{
-                        "data-key":item.dataIndex
-                    },
-                    style:{
-                        width:item.width
-                    }
-                }
-            ));
-            tableHeader.children.push(h(
-                "th",
-                {
-                    class:{
-                        "woo-table-th":true,
-                        "woo-table-ellipsis":item.ellipsis,
-                        "woo-table-fixed-start":item.fixed ==="start",
-                        "woo-table-fixed-end":item.fixed ==="end"
-                    },
-                    style:{
-                        textAlign:item.align,
-                        position:item.fixed?"sticky":"",
-                        left:item.fixed ==="start"?fixedHeadStartWidth:"",
-                        right:item.fixed ==="end"?fixedHeadEndWidth:""
-                    }
-                },
-                [
-                    item.title
-                ]
-            ));
-            if(item.fixed === "start"){
-                fixedHeadStartWidth += item.width || 100;
-            }
-            if(item.fixed === "end"){
-                fixedHeadEndWidth += item.width || 100;
-                fixedHeadEndVisible = true;
-            }
-        }
-
-
+    methods: {},
+    render: function (h) {
+        const {tableList} = tableBodyColumns(this.dataSource, this.columns, this.rowKey, this.$scopedSlots, h);
+        const {colgroupList, tableHeader} = tableHeaderColumns(this.columns, h);
 
         return h(
             "div",
             {
-                class:{
-                    "woo-table-group":true,
-                    "woo-table-group-fixed-end":fixedHeadEndVisible
+                class: {
+                    "woo-table-group": true,
+                    [this.targetClass]: true
                 },
-                style:{
-                    maxWidth:this.width,
+                style: {
+                    maxWidth: this.width,
                     maxHeight: this.height
                 },
-                on:{
-                    load:(e)=>{
+                ref: "woo-table-group",
+                on: {
+                    load: (e) => {
                         console.log(e);
                     },
-                    scroll:(e)=>{
-                        if(e.target.scrollLeft > 0){
+                    scroll: (e) => {
+                        if (e.target.scrollLeft > 0) {
                             e.target.classList.add("woo-table-group-fixed-start");
                         }
-                        if(e.target.scrollLeft <= 0){
+                        if (e.target.scrollLeft <= 0) {
                             e.target.classList.remove("woo-table-group-fixed-start");
                         }
-                        if(e.target.scrollWidth -e.target.scrollLeft  - e.target.offsetWidth){
+                        if (e.target.scrollWidth - e.target.scrollLeft - e.target.offsetWidth) {
                             e.target.classList.add("woo-table-group-fixed-end");
                         }
-                        if(e.target.scrollWidth -e.target.scrollLeft  - e.target.offsetWidth <= 0){
+                        if (e.target.scrollWidth - e.target.scrollLeft - e.target.offsetWidth <= 1) {
                             e.target.classList.remove("woo-table-group-fixed-end");
                         }
                     }
@@ -173,21 +106,21 @@ export default {
                 h(
                     "div",
                     {
-                        class:{
-                            "woo-table-header":true
+                        class: {
+                            "woo-table-header": true
                         }
                     },
                     [
                         h(
                             "table",
                             {
-                                class:{
-                                    "woo-table":true
+                                class: {
+                                    "woo-table": true
                                 },
-                                attrs:{
-                                    cellspacing:0,
-                                    cellpadding:0,
-                                    border:0
+                                attrs: {
+                                    cellspacing: 0,
+                                    cellpadding: 0,
+                                    border: 0
                                 }
                             },
                             [
@@ -199,9 +132,9 @@ export default {
                                 h(
                                     "thead",
                                     {
-                                        "woo-table-thead":true
+                                        "woo-table-thead": true
                                     },
-                                    [tableHeader]
+                                    tableHeader
                                 )
                             ]
                         )
@@ -210,21 +143,21 @@ export default {
                 h(
                     "div",
                     {
-                        class:{
-                            "woo-table-body":true
+                        class: {
+                            "woo-table-body": true
                         }
                     },
                     [
                         h(
                             "table",
                             {
-                                class:{
-                                    "woo-table":true
+                                class: {
+                                    "woo-table": true
                                 },
-                                attrs:{
-                                    cellspacing:0,
-                                    cellpadding:0,
-                                    border:0
+                                attrs: {
+                                    cellspacing: 0,
+                                    cellpadding: 0,
+                                    border: 0
                                 }
                             },
                             [
@@ -236,7 +169,7 @@ export default {
                                 h(
                                     "thead",
                                     {
-                                        "woo-table-thead":true
+                                        "woo-table-thead": true
                                     },
                                     tableList
                                 )

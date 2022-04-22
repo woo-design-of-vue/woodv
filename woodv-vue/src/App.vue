@@ -100,14 +100,21 @@
                 <w-textarea v-model="textarea" rows="10"></w-textarea>
             </div>
         </div>
-        <w-table :data-source="dataSource" :columns="columns" height="500px" width="1000px">
-            <template #age="{text,row}">
-                <a href="">{{row.age}}</a>
-            </template>
-            <template #action="{row}">
-               123456
-            </template>
-        </w-table>
+        <div class="table" style="margin-top: 16px;">
+            <w-table :data-source="dataSource" targetClass="xl-table" :columns="columns" rowKey="id">
+                <template #age="{text,row}">
+                    <a href="">{{row.age}}</a>
+                </template>
+                <template #action="{row}">
+                    <w-btn size="mini" type="danger">
+                        删除
+                    </w-btn>
+                    <w-btn size="mini" type="primary">
+                        修改
+                    </w-btn>
+                </template>
+            </w-table>
+        </div>
     </div>
 </template>
 
@@ -125,150 +132,112 @@
                     {
                         id: 1,
                         name: "小鹿",
+                        firstName:"小",
+                        lastName:"鹿",
                         age: 27,
                         sex: "男"
                     },
                     {
                         id: 2,
                         name: "刘冰",
+                        firstName:"刘",
+                        lastName:"冰",
                         age: 26,
                         sex: "男"
                     },
                     {
                         id: 3,
                         name: "徐嘉玲",
-                        age: 26,
-                        sex: "女"
-                    },
-                    {
-                        id: 1,
-                        name: "小鹿",
-                        age: 27,
-                        sex: "男"
-                    },
-                    {
-                        id: 2,
-                        name: "刘冰",
-                        age: 26,
-                        sex: "男"
-                    },
-                    {
-                        id: 3,
-                        name: "徐嘉玲",
-                        age: 26,
-                        sex: "女"
-                    },
-                    {
-                        id: 1,
-                        name: "小鹿",
-                        age: 27,
-                        sex: "男"
-                    },
-                    {
-                        id: 2,
-                        name: "刘冰",
-                        age: 26,
-                        sex: "男"
-                    },
-                    {
-                        id: 3,
-                        name: "徐嘉玲",
-                        age: 26,
-                        sex: "女"
-                    },
-                    {
-                        id: 1,
-                        name: "小鹿",
-                        age: 27,
-                        sex: "男"
-                    },
-                    {
-                        id: 2,
-                        name: "刘冰",
-                        age: 26,
-                        sex: "男"
-                    },
-                    {
-                        id: 3,
-                        name: "徐嘉玲",
-                        age: 26,
-                        sex: "女"
-                    },
-                    {
-                        id: 1,
-                        name: "小鹿",
-                        age: 27,
-                        sex: "男"
-                    },
-                    {
-                        id: 2,
-                        name: "刘冰",
-                        age: 26,
-                        sex: "男"
-                    },
-                    {
-                        id: 3,
-                        name: "徐嘉玲",
-                        age: 26,
-                        sex: "女"
-                    },
-                    {
-                        id: 1,
-                        name: "小鹿",
-                        age: 27,
-                        sex: "男"
-                    },
-                    {
-                        id: 2,
-                        name: "刘冰",
-                        age: 26,
-                        sex: "男"
-                    },
-                    {
-                        id: 3,
-                        name: "徐嘉玲",
-                        age: 26,
-                        sex: "女"
-                    },
-                    {
-                        id: 1,
-                        name: "小鹿",
-                        age: 27,
-                        sex: "男"
-                    },
-                    {
-                        id: 2,
-                        name: "刘冰",
-                        age: 26,
-                        sex: "男"
-                    },
-                    {
-                        id: 3,
-                        name: "徐嘉玲",
+                        firstName:"徐",
+                        lastName:"嘉玲",
                         age: 26,
                         sex: "女"
                     }
                 ],
                 columns: [
                     {
-                        dataIndex: "name",
                         title: "姓名",
+                        dataIndex: "lastName",
                         width: "200px",
                         align: "left",
-                        render: (text) => {
-                            if (text === "小鹿") {
-                                return "马京城";
-                            }
-                            return text
-                        },
-                        fixed: "start"
+                        fixed:"start"
                     },
                     {
                         dataIndex: "age",
                         title: "年龄",
                         width: "200px",
                         slots: "age",
-                        fixed: "start"
+                        fixed:"start",
+                        children:[
+                            {
+                                dataIndex: "age",
+                                title: "年龄3",
+                                width: "200px",
+                                fixed:"start",
+                                children:[
+                                    {
+                                        dataIndex: "age",
+                                        title: "年龄3",
+                                        width: "200px",
+                                        align: "left",
+                                        children:[
+                                            {
+                                                dataIndex: "age",
+                                                title: "年龄3",
+                                                width: "200px",
+                                                align: "left",
+                                                children:[
+                                                    {
+                                                        dataIndex: "age",
+                                                        title: "年龄3",
+                                                        width: "200px",
+                                                        align: "left",
+                                                        children:[
+                                                            {
+                                                                dataIndex: "age",
+                                                                title: "年龄3",
+                                                                width: "200px",
+                                                                align: "left"
+                                                            },
+                                                            {
+                                                                dataIndex: "age",
+                                                                title: "年龄3",
+                                                                width: "200px",
+                                                                align: "left"
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        dataIndex: "age",
+                                                        title: "年龄3",
+                                                        width: "200px",
+                                                        align: "left"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                dataIndex: "age",
+                                                title: "年龄3",
+                                                width: "200px",
+                                                align: "left"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        dataIndex: "age",
+                                        title: "年龄3",
+                                        width: "200px",
+                                        align: "left"
+                                    }
+                                ]
+                            },
+                            {
+                                dataIndex: "age",
+                                title: "年龄3",
+                                width: "200px",
+                                align: "left"
+                            }
+                        ]
                     },
                     {
                         dataIndex: "sex",
@@ -280,7 +249,7 @@
                         title: "操作",
                         width:"200px",
                         slots: "action",
-                        fixed: "end"
+                        fixed:"end"
                     },
                 ]
             }

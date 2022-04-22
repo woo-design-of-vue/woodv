@@ -250,6 +250,7 @@
 .woo-rate .woo-rate-item .woo-rate-text {
   color: #666;
   font-size: 14px;
+  transition: all 0.3s;
 }
 .woo-textarea {
   min-height: 100px;
@@ -351,6 +352,10 @@
 .woo-table-group .woo-table-header tr .woo-table-fixed-end {
   background-color: #FAFAFA;
   z-index: 1;
+}
+.woo-table-group .woo-table-header tr:nth-child(n+2) th {
+  border-top: none;
+  border-left: none;
 }
 .woo-table-group .woo-table-body tr:hover td {
   background-color: #FAFAFA;
