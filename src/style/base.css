@@ -373,6 +373,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.woo-table-group .table-children-group {
+  display: flex;
+  align-items: center;
+}
+.woo-table-group .table-children-group .table-children-action {
+  border: 1px solid #eee;
+  padding: 2px;
+  margin-right: 4px;
+}
 .woo-not-select {
   user-select: none;
 }

@@ -1,66 +1,111 @@
 import tableRender from "./tableRender";
 
-const getBodyColumns = ( item, index, columns, isFixed, $scopedSlots, h)=>{
-    let fixedBodyStartWidth = 0;
-    let fixedBodyEndWidth = 0;
-    const tableNode = [];
+function sortColumns(columns, isFixed=true) {
+    const columnsList = [];
+    
+    for(const index in columns){
+        const item = columns[index];
 
-    for (const childIndex in columns) {
-        const child = columns[childIndex];
-
-        if(child.children&&child.children.length){
-            tableNode.push(...getBodyColumns(item, index, child.children, false, $scopedSlots, h));
+        if(!isFixed){
+            delete item.fixed;
+        }
+        if(item.width && typeof item.width !== "number"){
+            item.width = Number(item.width.replace(/[^\d]/g, ""));
+        }
+        if(item.children&&item.children.length){
+            columnsList.push(...sortColumns(item.children, false));
         }else{
+            columnsList.push(item);
+        }
+    }
+
+    return columnsList;
+
+}
+
+const sortDataSource = (dataSource, isChildren, targetIndex="0", isShow=true, level=0)=>{
+    const dataSourceList = [];
+
+    for(const index in dataSource){
+        const item = dataSource[index];
+        const childTargetIndex = targetIndex + "-" + index;
+
+        item.wooTableIndex = childTargetIndex;
+        item.wooTableTargetIndex = targetIndex;
+        item.wooTableIsChildren = false;
+        item.wooTableIsShow = isShow;
+        item.wooTablelevel=level;
+        dataSourceList.push(item);
+        if(isChildren && item.children&&item.children.length){
+            item.wooTableIsChildren = true;
+            dataSourceList.push(...sortDataSource(item.children, isChildren, childTargetIndex, false, level+1));
+        }
+    }
+    return dataSourceList;
+};
+
+export default (isChildren, dataSource, columns, rowKey, $scopedSlots, h)=>{
+    const tableList = [];
+    const cloneColumns = sortColumns(JSON.parse(JSON.stringify(columns)));
+    let cloneDataSource = [];
+
+    if(isChildren){
+        cloneDataSource = sortDataSource(JSON.parse(JSON.stringify(dataSource)), isChildren);
+    }else{
+        cloneDataSource = sortDataSource(JSON.parse(JSON.stringify(dataSource)), isChildren);
+    }
+    for (const index in cloneDataSource) {
+        const item = cloneDataSource[index];
+
+        const tableNode = h(
+            "tr",
+            {
+                class: {
+                    "woo-table-tr": true,
+                    ["woo-table-target-"+item.wooTableTargetIndex]:true,
+                    ["woo-table-level-"+item.wooTablelevel]:true,
+                },
+                style:{
+                    display:item.wooTableIsShow?"table-row":"none"
+                },
+                key: item[rowKey] || item.wooTableIndex || index
+            },
+            []
+        );
+        let fixedBodyStartWidth = 0;
+        let fixedBodyEndWidth = 0;
+
+        for(const childIndex in cloneColumns){
+
+            const child = cloneColumns[childIndex];
             const childNode = h(
                 "td",
                 {
                     class: {
                         "woo-table-th": true,
                         "woo-table-ellipsis": child.ellipsis,
-                        "woo-table-fixed-start": isFixed && child.fixed === "start",
-                        "woo-table-fixed-end": isFixed && child.fixed === "end"
+                        "woo-table-fixed-start":child.fixed === "start",
+                        "woo-table-fixed-end": child.fixed === "end"
                     },
-
                     style: {
                         textAlign: child.align,
-                        position: isFixed && child.fixed ? "sticky" : "",
-                        left: isFixed && child.fixed === "start" ? fixedBodyStartWidth : "",
-                        right: isFixed && child.fixed === "end" ? fixedBodyEndWidth : ""
+                        position: child.fixed ? "sticky" : "",
+                        left:child.fixed === "start"?fixedBodyStartWidth+"px":"",
+                        right:child.fixed === "end"?fixedBodyEndWidth+"px":"",
+                        paddingLeft:childIndex==="0"?item.wooTablelevel*15 + 5+"px":"5px"
                     }
                 },
-                tableRender(item[child.dataIndex], item, index, child, $scopedSlots)
+                tableRender(item[child.dataIndex], item, index, child, childIndex, $scopedSlots, h)
             );
 
             if (child.fixed === "start") {
-                fixedBodyStartWidth += child.width || 100;
+                fixedBodyStartWidth += Number(child.width) || 100;
             }
             if (child.fixed === "end") {
-                fixedBodyEndWidth += child.width || 100;
+                fixedBodyEndWidth += Number(child.width) || 100;
             }
-            tableNode.push(childNode);
+            tableNode.children.push(childNode);
         }
-    }
-    return tableNode;
-};
-
-export default (dataSource, columns, rowKey, $scopedSlots, h)=>{
-    const tableList = [];
-
-    for (const index in dataSource) {
-
-        const item = dataSource[index];
-        const tableNode = h(
-            "tr",
-            {
-                class: {
-                    "woo-table-tr": true
-                },
-                key: item[rowKey]
-            },
-            []
-        );
-
-        tableNode.children.push(...getBodyColumns(item, index, columns, true, $scopedSlots, h));
         tableList.push(tableNode);
     }
     return {

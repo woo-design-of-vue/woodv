@@ -101,7 +101,15 @@
             </div>
         </div>
         <div class="table" style="margin-top: 16px;">
-            <w-table :data-source="dataSource" targetClass="xl-table" :columns="columns" rowKey="id">
+            <w-table
+                    :data-source="dataSource"
+                    targetClass="xl-table"
+                    :columns="columns"
+                    rowKey="id"
+                    children
+                    selection
+                    @selection="selectionChange"
+            >
                 <template #age="{text,row}">
                     <a href="">{{row.age}}</a>
                 </template>
@@ -135,7 +143,59 @@
                         firstName:"小",
                         lastName:"鹿",
                         age: 27,
-                        sex: "男"
+                        sex: "男",
+                        children:[
+                            {
+                                id: 4,
+                                name: "小鹿1",
+                                firstName:"小",
+                                lastName:"鹿",
+                                age: 27,
+                                sex: "男"
+                            },
+                            {
+                                id: 5,
+                                name: "小鹿2",
+                                firstName:"小",
+                                lastName:"鹿",
+                                age: 27,
+                                sex: "男",
+                                children:[
+                                    {
+                                        id: 7,
+                                        name: "小鹿1",
+                                        firstName:"小",
+                                        lastName:"鹿",
+                                        age: 27,
+                                        sex: "男",
+                                    },
+                                    {
+                                        id: 8,
+                                        name: "小鹿1",
+                                        firstName:"小",
+                                        lastName:"鹿",
+                                        age: 27,
+                                        sex: "男",
+                                    },
+                                    {
+                                        id: 9,
+                                        name: "小鹿1",
+                                        firstName:"小",
+                                        lastName:"鹿",
+                                        age: 27,
+                                        sex: "男",
+                                    }
+                                ]
+                            },
+                            {
+                                id: 6,
+                                name: "小鹿3",
+                                firstName:"小",
+                                lastName:"鹿",
+                                age: 27,
+                                sex: "男",
+                            }
+                        ]
                     },
                     {
                         id: 2,
@@ -171,73 +231,32 @@
                         children:[
                             {
                                 dataIndex: "age",
-                                title: "年龄3",
+                                title: "年龄",
                                 width: "200px",
-                                fixed:"start",
-                                children:[
-                                    {
-                                        dataIndex: "age",
-                                        title: "年龄3",
-                                        width: "200px",
-                                        align: "left",
-                                        children:[
-                                            {
-                                                dataIndex: "age",
-                                                title: "年龄3",
-                                                width: "200px",
-                                                align: "left",
-                                                children:[
-                                                    {
-                                                        dataIndex: "age",
-                                                        title: "年龄3",
-                                                        width: "200px",
-                                                        align: "left",
-                                                        children:[
-                                                            {
-                                                                dataIndex: "age",
-                                                                title: "年龄3",
-                                                                width: "200px",
-                                                                align: "left"
-                                                            },
-                                                            {
-                                                                dataIndex: "age",
-                                                                title: "年龄3",
-                                                                width: "200px",
-                                                                align: "left"
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
-                                                        dataIndex: "age",
-                                                        title: "年龄3",
-                                                        width: "200px",
-                                                        align: "left"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                dataIndex: "age",
-                                                title: "年龄3",
-                                                width: "200px",
-                                                align: "left"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        dataIndex: "age",
-                                        title: "年龄3",
-                                        width: "200px",
-                                        align: "left"
-                                    }
-                                ]
+                                slots: "age",
+                                fixed:"start"
                             },
                             {
                                 dataIndex: "age",
-                                title: "年龄3",
+                                title: "年龄",
                                 width: "200px",
-                                align: "left"
+                                slots: "age",
+                                fixed:"start"
                             }
                         ]
+                    },
+                    {
+                        dataIndex: "age",
+                        title: "年龄",
+                        width: "200px",
+                        slots: "age",
+                        fixed:"start"
+                    },
+                    {
+                        dataIndex: "age",
+                        title: "年龄",
+                        width: "200px",
+                        slots: "age"
                     },
                     {
                         dataIndex: "sex",
@@ -296,6 +315,9 @@
             },
             checkboxGroupChange(e) {
                 console.log(e, "checkboxGroup")
+            },
+            selectionChange(e) {
+                console.log(e)
             }
         }
     }
