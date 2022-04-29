@@ -28,17 +28,22 @@ const buildRowAndColSpan = (maxRowLevel, rowIndex, columns, tableHeader = [], h,
     ));
     for (const colIndex in columns) {
         const item = columns[colIndex];
-        let childIsFixed = true;
 
+        if(!isFixed){
+            delete item.fixed;
+        }
+
+        if(item.width && typeof item.width !== "number"){
+            item.width = Number(item.width.replace(/[^\d]/g, ""));
+        }
         if (item.children && item.children.length) {
-            item.rowSpan = 1;
-            // item.colSpan = item.children.length;
             const result = buildRowAndColSpan(maxRowLevel, rowIndex + 1, item.children, tableHeader, h, false);
 
+            delete item.fixed;
+            item.rowSpan = 1;
             item.colSpan = result.colsSize;
             colsSize += result.colsSize;
             colgroupList.push(...result.colgroupList);
-            childIsFixed = false;
         } else {
             colsSize++;
             item.rowSpan = maxRowLevel - rowIndex;
@@ -51,7 +56,7 @@ const buildRowAndColSpan = (maxRowLevel, rowIndex, columns, tableHeader = [], h,
                         "data-key": item.dataIndex
                     },
                     style: {
-                        width: item.width
+                        width: item.width+"px"
                     }
                 }
             ));
@@ -62,14 +67,14 @@ const buildRowAndColSpan = (maxRowLevel, rowIndex, columns, tableHeader = [], h,
                 class: {
                     "woo-table-th": true,
                     "woo-table-ellipsis": item.ellipsis,
-                    "woo-table-fixed-start": childIsFixed && isFixed && item.fixed === "start",
-                    "woo-table-fixed-end": childIsFixed && isFixed && item.fixed === "end"
+                    "woo-table-fixed-start":item.fixed === "start",
+                    "woo-table-fixed-end": item.fixed && item.fixed === "end"
                 },
                 style: {
                     textAlign: item.align,
-                    position: childIsFixed && isFixed && item.fixed ? "sticky" : "",
-                    left: childIsFixed && isFixed && item.fixed === "start" ? fixedHeadStartWidth : "",
-                    right: childIsFixed && isFixed && item.fixed === "end" ? fixedHeadEndWidth : ""
+                    position: item.fixed && item.fixed ? "sticky" : "",
+                    left: item.fixed && item.fixed === "start" ? fixedHeadStartWidth +"px": "",
+                    right: item.fixed && item.fixed === "end" ? fixedHeadEndWidth+"px" : ""
                 },
                 attrs: {
                     rowspan: item.rowSpan,
@@ -80,7 +85,6 @@ const buildRowAndColSpan = (maxRowLevel, rowIndex, columns, tableHeader = [], h,
                 item.title
             ]
         ));
-
         if (item.fixed === "start") {
             fixedHeadStartWidth += item.width || 100;
         }
@@ -102,7 +106,7 @@ const buildRowAndColSpan = (maxRowLevel, rowIndex, columns, tableHeader = [], h,
 
 const tableHeaderColumns = (columns, h) => {
     const maxLevel = getArrMaxLevel(JSON.parse(JSON.stringify(columns)));
-    const {colgroupList, tableHeader} = buildRowAndColSpan(maxLevel, 0, columns, [], h);
+    const {colgroupList, tableHeader} = buildRowAndColSpan(maxLevel, 0, JSON.parse(JSON.stringify(columns)), [], h);
 
     return {
         colgroupList,

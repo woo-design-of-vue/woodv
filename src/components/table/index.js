@@ -47,6 +47,16 @@ export default {
             type: String,
             required: false,
             default: ""
+        },
+        children:{
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        selection:{
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     mounted() {
@@ -67,7 +77,7 @@ export default {
     },
     methods: {},
     render: function (h) {
-        const {tableList} = tableBodyColumns(this.dataSource, this.columns, this.rowKey, this.$scopedSlots, h);
+        const {tableList} = tableBodyColumns(this.children, this.dataSource, this.columns, this.rowKey, this.$scopedSlots, h);
         const {colgroupList, tableHeader} = tableHeaderColumns(this.columns, h);
 
         return h(
