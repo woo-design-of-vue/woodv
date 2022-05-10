@@ -1,6 +1,7 @@
 
-import tableHeaderColumns from "../../util/function/tableHeaderColumns";
-import tableBodyColumns from "../../util/function/tableBodyColumns";
+import tableHeaderColumns from "../../util/function/table-header-columns";
+import tableBodyColumns from "../../util/function/table-body-columns";
+import tableCheckboxWatch from "../../util/function/table-checkbox-watch";
 export default {
     name: "WTable",
     props: {
@@ -41,7 +42,7 @@ export default {
         rowKey: {
             type: String,
             required: false,
-            default: "id"
+            default: ""
         },
         targetClass: {
             type: String,
@@ -77,8 +78,32 @@ export default {
     },
     methods: {},
     render: function (h) {
-        const {tableList} = tableBodyColumns(this.children, this.dataSource, this.columns, this.rowKey, this.$scopedSlots, h);
-        const {colgroupList, tableHeader} = tableHeaderColumns(this.columns, h);
+        const cloneColumns = JSON.parse(JSON.stringify(this.columns));
+
+        if(cloneColumns.length >0){
+            if(cloneColumns[0].fixed){
+                cloneColumns.unshift({
+                    wooTableType:"checkbox",
+                    width:"60px",
+                    fixed:"start",
+                    align:"center"
+                });
+            }else{
+                cloneColumns.unshift({
+                    wooTableType:"checkbox",
+                    width:"60px",
+                    align:"center"
+                });
+            }
+        }else{
+            cloneColumns.unshift({
+                wooTableType:"checkbox",
+                width:"60px",
+                align:"center"
+            });
+        }
+        const {tableList} = tableBodyColumns(this, cloneColumns);
+        const {colgroupList, tableHeader} = tableHeaderColumns(this, cloneColumns);
 
         return h(
             "div",

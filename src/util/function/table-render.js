@@ -1,5 +1,31 @@
 import "material-design-icons-iconfont";
-export default (text, row, index, columnItem, columnItemIndex, slots, h)=>{
+
+
+
+function setTableChildIsShow(e, isShow, row) {
+    const targetList = document.getElementsByClassName("woo-table-target-"+row.wooTableIndex);
+
+    if(isShow){
+        e.innerText = "remove";
+        for(const targetNode of targetList){
+            targetNode.style.display = "table-row";
+        }
+    }else{
+        e.innerText = "add";
+        for(const targetNode of targetList){
+            targetNode.style.display = "none";
+        }
+        if(row.children && row.children.length){
+            for(const targetChild of row.children){
+                const targetChildNode = document.getElementById("woo-table-child-material-icons-"+row.wooTableIndex);
+
+                targetChildNode.wooTableIsShow = false;
+                setTableChildIsShow(targetChildNode, targetChildNode.wooTableIsShow||false, targetChild);
+            }
+        }
+    }
+}
+export default (selection, text, row, index, columnItem, columnItemIndex, slots, h)=>{
     let columnItemNode = {};
 
     if(columnItem.slots && slots[columnItem.slots]){
@@ -17,9 +43,7 @@ export default (text, row, index, columnItem, columnItemIndex, slots, h)=>{
     }else{
         columnItemNode = [text];
     }
-    if(row.wooTableIsChildren && columnItemIndex==="0"){
-        let openChild = false;
-
+    if(row.wooTableIsChildren && (selection?columnItemIndex==="1":columnItemIndex==="0")){
         return  [
             h(
                 "div",
@@ -37,26 +61,21 @@ export default (text, row, index, columnItem, columnItemIndex, slots, h)=>{
                                 "woo-not-select":true,
                                 "table-children-action":true
                             },
+                            attrs:{
+                                id:"woo-table-child-material-icons-"+row.wooTableIndex,
+                            },
                             style:{
                                 fontSize:"14px"
                             },
                             on:{
                                 click:function (e) {
-                                    openChild = !openChild;
-                                    const targetList = document.getElementsByClassName("woo-table-target-"+row.wooTableIndex);
 
-                                    if(openChild){
-                                        e.target.innerText = "remove";
-                                        for(const targetNode of targetList){
-                                            targetNode.style.display = "table-row";
-                                        }
-                                    }else{
-                                        e.target.innerText = "add";
-                                        for(const targetNode of targetList){
-                                            targetNode.style.display = "none";
-                                        }
+                                    if(e.target.wooTableIsShow){
+                                        e.target.wooTableIsShow = !e.target.wooTableIsShow;
+                                    }else {
+                                        e.target.wooTableIsShow = true;
                                     }
-
+                                    setTableChildIsShow(e.target, e.target.wooTableIsShow, row);
                                 }
                             }
                         },
@@ -71,7 +90,4 @@ export default (text, row, index, columnItem, columnItemIndex, slots, h)=>{
     }else{
         return columnItemNode;
     }
-
-
-
 };

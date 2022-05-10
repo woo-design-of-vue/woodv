@@ -1,8 +1,9 @@
 import tableRender from "./tableRender";
+import tableRenderCheckbox from "./tableRenderCheckbox";
 
 function sortColumns(columns, isFixed=true) {
     const columnsList = [];
-    
+
     for(const index in columns){
         const item = columns[index];
 
@@ -44,41 +45,32 @@ const sortDataSource = (dataSource, isChildren, targetIndex="0", isShow=true, le
     return dataSourceList;
 };
 
-export default (isChildren, dataSource, columns, rowKey, $scopedSlots, h)=>{
-    const tableList = [];
-    const cloneColumns = sortColumns(JSON.parse(JSON.stringify(columns)));
-    let cloneDataSource = [];
+export default (vueProperty, columns)=>{
+    console.timeStamp("render");
+    const {selection, children:isChildren, dataSource, rowKey, $scopedSlots, $createElement:h} = vueProperty;
 
-    if(isChildren){
-        cloneDataSource = sortDataSource(JSON.parse(JSON.stringify(dataSource)), isChildren);
-    }else{
-        cloneDataSource = sortDataSource(JSON.parse(JSON.stringify(dataSource)), isChildren);
-    }
+    const tableList = [];
+    const cloneColumns = sortColumns(columns);
+
+    const cloneDataSource = sortDataSource(JSON.parse(JSON.stringify(dataSource)), isChildren);
+
     for (const index in cloneDataSource) {
         const item = cloneDataSource[index];
-
-        const tableNode = h(
-            "tr",
-            {
-                class: {
-                    "woo-table-tr": true,
-                    ["woo-table-target-"+item.wooTableTargetIndex]:true,
-                    ["woo-table-level-"+item.wooTablelevel]:true,
-                },
-                style:{
-                    display:item.wooTableIsShow?"table-row":"none"
-                },
-                key: item[rowKey] || item.wooTableIndex || index
-            },
-            []
-        );
         let fixedBodyStartWidth = 0;
         let fixedBodyEndWidth = 0;
+        const trChildNodes = [];
 
         for(const childIndex in cloneColumns){
 
             const child = cloneColumns[childIndex];
-            const childNode = h(
+            let childNode = {};
+
+            let render = tableRender(selection, item[child.dataIndex], item, index, child, childIndex, $scopedSlots, h);
+
+            if(selection && childIndex==="0"){
+                render = [tableRenderCheckbox(h, (e)=>{console.log(e);})];
+            }
+            childNode = h(
                 "td",
                 {
                     class: {
@@ -92,10 +84,10 @@ export default (isChildren, dataSource, columns, rowKey, $scopedSlots, h)=>{
                         position: child.fixed ? "sticky" : "",
                         left:child.fixed === "start"?fixedBodyStartWidth+"px":"",
                         right:child.fixed === "end"?fixedBodyEndWidth+"px":"",
-                        paddingLeft:childIndex==="0"?item.wooTablelevel*15 + 5+"px":"5px"
+                        paddingLeft:(selection?childIndex==="1":childIndex==="0")?item.wooTablelevel*15 + 5+"px":"5px"
                     }
                 },
-                tableRender(item[child.dataIndex], item, index, child, childIndex, $scopedSlots, h)
+                render
             );
 
             if (child.fixed === "start") {
@@ -104,10 +96,29 @@ export default (isChildren, dataSource, columns, rowKey, $scopedSlots, h)=>{
             if (child.fixed === "end") {
                 fixedBodyEndWidth += Number(child.width) || 100;
             }
-            tableNode.children.push(childNode);
+            trChildNodes.push(childNode);
         }
+        const tableNode = h(
+            "tr",
+            {
+                class: {
+                    "woo-table-tr": true,
+                    ["woo-table-target-"+item.wooTableTargetIndex]:true,
+                },
+                attrs:{
+                    id:"woo-table-level-"+item.wooTablelevel+"-"+item.wooTableIndex,
+                },
+                style:{
+                    display:item.wooTableIsShow?"table-row":"none"
+                },
+                key: item[rowKey] || item.wooTableIndex || index
+            },
+            trChildNodes
+        );
+
         tableList.push(tableNode);
     }
+    console.timeEnd("render");
     return {
         tableList
     };

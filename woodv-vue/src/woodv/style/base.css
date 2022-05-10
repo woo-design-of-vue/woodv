@@ -157,6 +157,9 @@
   cursor: not-allowed !important;
   opacity: 1;
 }
+.woo-table-checkbox {
+  justify-content: center;
+}
 .woo-checkbox {
   display: flex;
   align-items: center;

@@ -105,10 +105,10 @@
                     :data-source="dataSource"
                     targetClass="xl-table"
                     :columns="columns"
-                    rowKey="id"
                     children
                     selection
                     @selection="selectionChange"
+                    height="500px"
             >
                 <template #age="{text,row}">
                     <a href="">{{row.age}}</a>
@@ -136,84 +136,16 @@
                 checkboxGroup: [1],
                 rate: 0,
                 textarea: "123456",
-                dataSource: [
-                    {
+                dataSource: Array.from(Array(1).keys()).map(()=>{
+                    return {
                         id: 1,
                         name: "小鹿",
                         firstName:"小",
                         lastName:"鹿",
                         age: 27,
-                        sex: "男",
-                        children:[
-                            {
-                                id: 4,
-                                name: "小鹿1",
-                                firstName:"小",
-                                lastName:"鹿",
-                                age: 27,
-                                sex: "男"
-                            },
-                            {
-                                id: 5,
-                                name: "小鹿2",
-                                firstName:"小",
-                                lastName:"鹿",
-                                age: 27,
-                                sex: "男",
-                                children:[
-                                    {
-                                        id: 7,
-                                        name: "小鹿1",
-                                        firstName:"小",
-                                        lastName:"鹿",
-                                        age: 27,
-                                        sex: "男",
-                                    },
-                                    {
-                                        id: 8,
-                                        name: "小鹿1",
-                                        firstName:"小",
-                                        lastName:"鹿",
-                                        age: 27,
-                                        sex: "男",
-                                    },
-                                    {
-                                        id: 9,
-                                        name: "小鹿1",
-                                        firstName:"小",
-                                        lastName:"鹿",
-                                        age: 27,
-                                        sex: "男",
-                                    }
-                                ]
-                            },
-                            {
-                                id: 6,
-                                name: "小鹿3",
-                                firstName:"小",
-                                lastName:"鹿",
-                                age: 27,
-                                sex: "男",
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        name: "刘冰",
-                        firstName:"刘",
-                        lastName:"冰",
-                        age: 26,
                         sex: "男"
-                    },
-                    {
-                        id: 3,
-                        name: "徐嘉玲",
-                        firstName:"徐",
-                        lastName:"嘉玲",
-                        age: 26,
-                        sex: "女"
                     }
-                ],
+                }),
                 columns: [
                     {
                         title: "姓名",

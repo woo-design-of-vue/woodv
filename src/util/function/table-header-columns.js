@@ -1,3 +1,4 @@
+import tableRenderCheckbox from "./table-render-checkbox";
 const getArrMaxLevel = (arr) => {
     let level = 0;
 
@@ -13,7 +14,7 @@ const getArrMaxLevel = (arr) => {
     }
     return level;
 };
-const buildRowAndColSpan = (maxRowLevel, rowIndex, columns, tableHeader = [], h, isFixed = true) => {
+const buildRowAndColSpan = (selection, maxRowLevel, rowIndex, columns, tableHeader = [], h, isFixed = true) => {
     let colsSize = 0;
     const colgroupList = [];
     let fixedHeadStartWidth = 0;
@@ -37,7 +38,7 @@ const buildRowAndColSpan = (maxRowLevel, rowIndex, columns, tableHeader = [], h,
             item.width = Number(item.width.replace(/[^\d]/g, ""));
         }
         if (item.children && item.children.length) {
-            const result = buildRowAndColSpan(maxRowLevel, rowIndex + 1, item.children, tableHeader, h, false);
+            const result = buildRowAndColSpan(selection, maxRowLevel, rowIndex + 1, item.children, tableHeader, h, false);
 
             delete item.fixed;
             item.rowSpan = 1;
@@ -82,7 +83,7 @@ const buildRowAndColSpan = (maxRowLevel, rowIndex, columns, tableHeader = [], h,
                 }
             },
             [
-                item.title
+                item.wooTableType==="checkbox"?tableRenderCheckbox(h, (e)=>{console.log(e);}):item.title
             ]
         ));
         if (item.fixed === "start") {
@@ -104,9 +105,10 @@ const buildRowAndColSpan = (maxRowLevel, rowIndex, columns, tableHeader = [], h,
 };
 
 
-const tableHeaderColumns = (columns, h) => {
-    const maxLevel = getArrMaxLevel(JSON.parse(JSON.stringify(columns)));
-    const {colgroupList, tableHeader} = buildRowAndColSpan(maxLevel, 0, JSON.parse(JSON.stringify(columns)), [], h);
+const tableHeaderColumns = (vueProperty, columns) => {
+    const {selection, $createElement:h} = vueProperty;
+    const maxLevel = getArrMaxLevel(columns);
+    const {colgroupList, tableHeader} = buildRowAndColSpan(selection, maxLevel, 0, columns, [], h);
 
     return {
         colgroupList,
