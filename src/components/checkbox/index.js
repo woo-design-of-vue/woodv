@@ -125,7 +125,7 @@ export default {
                                             margin:0,
                                         },
                                         on:{
-                                            change:(e)=>{
+                                            change:()=>{
                                                 if(this.provideIsItem){
                                                     const valueIndex = this.provideValue.value.indexOf(this.value);
 
@@ -135,7 +135,7 @@ export default {
                                                         this.provideValue.value.push(this.value);
                                                     }
                                                 }else{
-                                                    this.$emit("change", e.target.checked);
+                                                    this.$emit("change", !this.model);
                                                 }
                                             }
                                         }
