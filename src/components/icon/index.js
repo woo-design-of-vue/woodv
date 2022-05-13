@@ -1,4 +1,5 @@
 import "material-design-icons-iconfont";
+import {strToNum} from "../../util/tool";
 export default {
     name:"WIcon",
     functional:true,
@@ -18,14 +19,15 @@ export default {
         return h(
             "span",
             {
-                class:{
+                class:Object.assign({
                     "material-icons":true,
                     "woo-not-select":true
-                },
-                style:{
-                    fontSize:context.props.size +"px",
+                }, context.data.class),
+                style:Object.assign({
+                    fontSize:strToNum(context.props.size) +"px",
                     color: context.props.color
-                },
+                }, context.data.style),
+                attrs:context.attrs,
                 on:context.listeners
             },
             context.children

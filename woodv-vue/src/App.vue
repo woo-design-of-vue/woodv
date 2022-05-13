@@ -105,8 +105,8 @@
                     :data-source="dataSource"
                     targetClass="xl-table"
                     :columns="columns"
-                    children
                     selection
+                    children
                     @selection="selectionChange"
                     height="500px"
             >
@@ -136,14 +136,118 @@
                 checkboxGroup: [1],
                 rate: 0,
                 textarea: "123456",
-                dataSource: Array.from(Array(1).keys()).map(()=>{
+                dataSource: Array.from(Array(1000).keys()).map((item)=>{
                     return {
                         id: 1,
-                        name: "小鹿",
+                        name: "小鹿1"+item,
                         firstName:"小",
-                        lastName:"鹿",
+                        lastName:"鹿1"+item,
                         age: 27,
-                        sex: "男"
+                        sex: "男",
+                        children:[
+                            {
+                                id: 1,
+                                name: "小鹿"+item,
+                                firstName:"小",
+                                lastName:"鹿2"+item,
+                                age: 27,
+                                sex: "男",
+                                children:[
+                                    {
+                                        id: 1,
+                                        name: "小鹿"+item,
+                                        firstName:"小",
+                                        lastName:"鹿3"+item,
+                                        age: 27,
+                                        sex: "男",
+                                    },
+                                    {
+                                        id: 1,
+                                        name: "小鹿"+item,
+                                        firstName:"小",
+                                        lastName:"鹿3"+item,
+                                        age: 27,
+                                        sex: "男",
+                                    },
+                                    {
+                                        id: 1,
+                                        name: "小鹿"+item,
+                                        firstName:"小",
+                                        lastName:"鹿3"+item,
+                                        age: 27,
+                                        sex: "男",
+                                    }
+                                ]
+                            },
+                            {
+                                id: 1,
+                                name: "小鹿"+item,
+                                firstName:"小",
+                                lastName:"鹿2"+item,
+                                age: 27,
+                                sex: "男",
+                                children:[
+                                    {
+                                        id: 1,
+                                        name: "小鹿"+item,
+                                        firstName:"小",
+                                        lastName:"鹿3"+item,
+                                        age: 27,
+                                        sex: "男",
+                                    },
+                                    {
+                                        id: 1,
+                                        name: "小鹿"+item,
+                                        firstName:"小",
+                                        lastName:"鹿3"+item,
+                                        age: 27,
+                                        sex: "男",
+                                    },
+                                    {
+                                        id: 1,
+                                        name: "小鹿"+item,
+                                        firstName:"小",
+                                        lastName:"鹿3"+item,
+                                        age: 27,
+                                        sex: "男",
+                                    }
+                                ]
+                            },
+                            {
+                                id: 1,
+                                name: "小鹿"+item,
+                                firstName:"小",
+                                lastName:"鹿2"+item,
+                                age: 27,
+                                sex: "男",
+                                children:[
+                                    {
+                                        id: 1,
+                                        name: "小鹿"+item,
+                                        firstName:"小",
+                                        lastName:"鹿3"+item,
+                                        age: 27,
+                                        sex: "男",
+                                    },
+                                    {
+                                        id: 1,
+                                        name: "小鹿"+item,
+                                        firstName:"小",
+                                        lastName:"鹿3"+item,
+                                        age: 27,
+                                        sex: "男",
+                                    },
+                                    {
+                                        id: 1,
+                                        name: "小鹿"+item,
+                                        firstName:"小",
+                                        lastName:"鹿3"+item,
+                                        age: 27,
+                                        sex: "男",
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 }),
                 columns: [
@@ -214,6 +318,9 @@
             },
             textarea(value) {
                 console.log(value, "textarea")
+            },
+            dataSource(){
+                console.log("dataSource update")
             }
         },
         methods: {
@@ -235,21 +342,13 @@
                 this.checkboxGroup = [1, 2, 3];
                 this.rate = 4;
                 this.textarea = "951357";
-                this.dataSource = [
-                    {
-                        id: 4,
-                        name: "王绪逢",
-                        age: 24,
-                        sex: "男"
-                    }
-                ]
 
             },
             checkboxGroupChange(e) {
                 console.log(e, "checkboxGroup")
             },
-            selectionChange(e) {
-                console.log(e)
+            selectionChange(v,k) {
+                console.log(v,k)
             }
         }
     }
