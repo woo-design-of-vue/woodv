@@ -136,7 +136,7 @@
                 checkboxGroup: [1],
                 rate: 0,
                 textarea: "123456",
-                dataSource: Array.from(Array(1000).keys()).map((item)=>{
+                dataSource: Array.from(Array(50).keys()).map((item)=>{
                     return {
                         id: 1,
                         name: "小鹿1"+item,
