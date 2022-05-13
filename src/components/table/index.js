@@ -24,16 +24,6 @@ export default {
             type: Array,
             required: true,
             default: () => {
-                // {
-                //     dataIndex: "name",
-                //         title: "姓名",
-                //     width: "200px",
-                //     align: "left",
-                //     slots: "slots",
-                //     render: (text,row,index,config) => {
-                // },
-                //     fixed: "start"
-                // }
                 return [];
             }
         },
@@ -143,20 +133,18 @@ export default {
             const checkedRowKeyList =[];
             const checkedMap = JSON.parse(JSON.stringify(this.checkedMap));
 
-            if(this.rowKey){
-                for(const key in checkedMap){
-                    const item = checkedMap[key];
-                    const index = item.wooTableIndex;
+            for(const key in checkedMap){
+                const item = checkedMap[key];
+                const index = item.wooTableIndex;
 
-                    delete  item.wooTableIndex;
-                    delete  item.wooTableTargetIndex;
-                    delete  item.wooTableIsChildren;
-                    delete  item.wooTableIsShow;
-                    delete  item.wooTableTargetIsShow;
-                    delete  item.wooTablelevel;
-                    delete  item.wooTableChecked;
-                    checkedRowKeyList.push(item[this.rowKey] || index);
-                }
+                delete  item.wooTableIndex;
+                delete  item.wooTableTargetIndex;
+                delete  item.wooTableIsChildren;
+                delete  item.wooTableIsShow;
+                delete  item.wooTableTargetIsShow;
+                delete  item.wooTablelevel;
+                delete  item.wooTableChecked;
+                checkedRowKeyList.push(item[this.rowKey] || index);
             }
             this.$emit("selection", Object.values(checkedMap), checkedRowKeyList);
         }
