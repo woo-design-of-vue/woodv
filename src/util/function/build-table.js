@@ -12,6 +12,9 @@ const buildRowAndColSpan = (maxRowLevel, rowIndex=0, columns, isFixed=true, tabl
     for (const colIndex in columns) {
         const item = columns[colIndex];
 
+        if(item.sorter){
+            item.wooTableSorterStatus = 1;
+        }
         if(!isFixed){
             delete item.fixed;
         }
@@ -88,6 +91,8 @@ function sortDataSource(isChildren, columns, level=0, wooTableIndex=0) {
 }
 
 
+
+
 function sortDataSourceMap(dataSource) {
     const map = {};
 
@@ -146,11 +151,53 @@ function setTableTrChildClose(dataSourceItem) {
         item.wooTableIsShow = false;
     }
 }
+
+
+function getTitleNode(column, h, sorterF) {
+    if(column.sorter){
+        return h(
+            "div",
+            {
+                class:{
+                    "woo-table-sorter-group":true,
+                },
+                on: {
+                    click:(e)=>{
+                        if(column.wooTableSorterStatus === 1){
+                            e.target.classList.add("woo-table-sorter-group-up");
+                            e.target.classList.remove("woo-table-sorter-group-down");
+                        }
+                        if(column.wooTableSorterStatus === 2){
+                            e.target.classList.add("woo-table-sorter-group-down");
+                            e.target.classList.remove("woo-table-sorter-group-up");
+
+                        }
+                        if(column.wooTableSorterStatus === 3){
+                            e.target.classList.remove("woo-table-sorter-group-up");
+                            e.target.classList.remove("woo-table-sorter-group-down");
+                        }
+                        sorterF();
+                    }
+                }
+            },
+            [
+                column.title,
+                h(
+                    "WTableSorter"
+                )
+            ]
+        );
+    }else{
+        return column.title;
+    }
+
+}
 export {
     buildRowAndColSpan,
     getColumnsLevel,
     sortDataSource,
     renderChildren,
     sortDataSourceMap,
-    setTableTrChildClose
+    setTableTrChildClose,
+    getTitleNode
 };

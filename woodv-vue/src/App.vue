@@ -142,7 +142,7 @@
                         name: "小鹿1"+item,
                         firstName:"小",
                         lastName:"鹿1"+item,
-                        age: 27,
+                        age: item,
                         sex: "男",
                         children:[
                             {
@@ -256,7 +256,8 @@
                         dataIndex: "lastName",
                         width: "200px",
                         align: "left",
-                        fixed:"start"
+                        fixed:"start",
+                        sorter:"firstName",
                     },
                     {
                         dataIndex: "age",
@@ -264,6 +265,7 @@
                         width: "200px",
                         slots: "age",
                         fixed:"start",
+                        sorter:"age",
                         children:[
                             {
                                 dataIndex: "age",

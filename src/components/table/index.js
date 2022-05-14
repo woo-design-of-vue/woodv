@@ -1,4 +1,4 @@
-import {strToNum} from "../../util/tool";
+import {strToLength, strToNum} from "../../util/tool";
 import {buildRowAndColSpan, getColumnsLevel, sortDataSource} from "../../util/function/build-table";
 import WTableColgroup from "./component/table-colgroup";
 import WTableHeaderTr from "./component/table-header-tr";
@@ -63,6 +63,11 @@ export default {
             type: Boolean,
             required: false,
             default: false
+        },
+        pagination:{
+            type: [Boolean, Object],
+            required: false,
+            default: true
         }
     },
     components:{
@@ -72,7 +77,7 @@ export default {
     },
     watch:{
         dataSource(value){
-            this.localDataSource = sortDataSource(this.children, value);
+            this.localDataSource = sortDataSource(this.children,  JSON.parse(JSON.stringify(value)));
         },
         columns(){
             this.loadColumnsLayout();
@@ -147,6 +152,27 @@ export default {
                 checkedRowKeyList.push(item[this.rowKey] || index);
             }
             this.$emit("selection", Object.values(checkedMap), checkedRowKeyList);
+        },
+        changeSorter(e){
+            const localDataSource = sortDataSource(this.children,  JSON.parse(JSON.stringify(this.dataSource)));
+
+            if(e.wooTableSorterStatus === 1){
+                e.wooTableSorterStatus = 2;
+                this.localDataSource = localDataSource.sort((f, l)=>{
+                    return strToLength(f[e.sorter])- strToLength(l[e.sorter]);
+                });
+            }else
+            if(e.wooTableSorterStatus === 2){
+                e.wooTableSorterStatus = 3;
+                this.localDataSource = localDataSource.sort((f, l)=>{
+                    return strToLength(l[e.sorter]) - strToLength(f[e.sorter]);
+                });
+
+            }else
+            if(e.wooTableSorterStatus === 3){
+                e.wooTableSorterStatus = 1;
+                this.localDataSource = localDataSource;
+            }
         }
     },
     mounted() {
@@ -170,33 +196,8 @@ export default {
         return h(
             "div",
             {
-                class: {
-                    "woo-table-group": true,
-                    [this.targetClass]: true
-                },
-                style: {
-                    maxWidth: this.width?strToNum(this.width)+"px":"",
-                    maxHeight: strToNum(this.height)+"px",
-                },
-                ref: "woo-table-group",
-                on: {
-                    load: (e) => {
-                        console.log(e);
-                    },
-                    scroll: (e) => {
-                        if (e.target.scrollLeft > 0) {
-                            e.target.classList.add("woo-table-group-fixed-start");
-                        }
-                        if (e.target.scrollLeft <= 0) {
-                            e.target.classList.remove("woo-table-group-fixed-start");
-                        }
-                        if (e.target.scrollWidth - e.target.scrollLeft - e.target.offsetWidth) {
-                            e.target.classList.add("woo-table-group-fixed-end");
-                        }
-                        if (e.target.scrollWidth - e.target.scrollLeft - e.target.offsetWidth <= 1) {
-                            e.target.classList.remove("woo-table-group-fixed-end");
-                        }
-                    }
+                class:{
+                    "woo-table":true
                 }
             },
             [
@@ -204,41 +205,120 @@ export default {
                     "div",
                     {
                         class: {
-                            "woo-table-header": true
+                            "woo-table-group": true,
+                            [this.targetClass]: true
+                        },
+                        style: {
+                            maxWidth: this.width?strToNum(this.width)+"px":"",
+                            maxHeight: strToNum(this.height)+"px",
+                        },
+                        ref: "woo-table-group",
+                        on: {
+                            load: (e) => {
+                                console.log(e);
+                            },
+                            scroll: (e) => {
+                                if (e.target.scrollLeft > 0) {
+                                    e.target.classList.add("woo-table-group-fixed-start");
+                                }
+                                if (e.target.scrollLeft <= 0) {
+                                    e.target.classList.remove("woo-table-group-fixed-start");
+                                }
+                                if (e.target.scrollWidth - e.target.scrollLeft - e.target.offsetWidth) {
+                                    e.target.classList.add("woo-table-group-fixed-end");
+                                }
+                                if (e.target.scrollWidth - e.target.scrollLeft - e.target.offsetWidth <= 1) {
+                                    e.target.classList.remove("woo-table-group-fixed-end");
+                                }
+                            }
                         }
                     },
                     [
                         h(
-                            "table",
+                            "div",
                             {
                                 class: {
-                                    "woo-table": true
-                                },
-                                attrs: {
-                                    cellspacing: 0,
-                                    cellpadding: 0,
-                                    border: 0
+                                    "woo-table-header": true
                                 }
                             },
                             [
                                 h(
-                                    "w-table-colgroup",
+                                    "table",
                                     {
-                                        attrs:{
-                                            columns:this.columnsLayout.colgroup
+                                        class: {
+                                            "woo-table": true
+                                        },
+                                        attrs: {
+                                            cellspacing: 0,
+                                            cellpadding: 0,
+                                            border: 0
                                         }
-                                    }
-                                ),
+                                    },
+                                    [
+                                        h(
+                                            "w-table-colgroup",
+                                            {
+                                                attrs:{
+                                                    columns:this.columnsLayout.colgroup
+                                                }
+                                            }
+                                        ),
+                                        h(
+                                            "WTableHeaderTr",
+                                            {
+                                                attrs:{
+                                                    tableTrGroup:this.columnsLayout.tableTrGroup,
+                                                    rowKey: this.rowKey,
+                                                    selection:this.selection,
+                                                    isHeaderChecked:this.isHeaderChecked
+                                                }
+                                            }
+                                        )
+                                    ]
+                                )
+                            ]
+                        ),
+                        h(
+                            "div",
+                            {
+                                class: {
+                                    "woo-table-body": true
+                                }
+                            },
+                            [
                                 h(
-                                    "WTableHeaderTr",
+                                    "table",
                                     {
-                                        attrs:{
-                                            tableTrGroup:this.columnsLayout.tableTrGroup,
-                                            rowKey: this.rowKey,
-                                            selection:this.selection,
-                                            isHeaderChecked:this.isHeaderChecked
+                                        class: {
+                                            "woo-table": true
+                                        },
+                                        attrs: {
+                                            cellspacing: 0,
+                                            cellpadding: 0,
+                                            border: 0
                                         }
-                                    }
+                                    },
+                                    [
+                                        h(
+                                            "w-table-colgroup",
+                                            {
+                                                attrs:{
+                                                    columns:this.columnsLayout.colgroup
+                                                }
+                                            }
+                                        ),
+                                        h(
+                                            "WTableBodyGroup",
+                                            {
+                                                attrs:{
+                                                    dataSource:this.localDataSource,
+                                                    columns:this.columnsLayout.colgroup,
+                                                    rowKey: this.rowKey,
+                                                    selection:this.selection
+                                                }
+                                            }
+                                        )
+                                    ]
                                 )
                             ]
                         )
@@ -246,47 +326,8 @@ export default {
                 ),
                 h(
                     "div",
-                    {
-                        class: {
-                            "woo-table-body": true
-                        }
-                    },
-                    [
-                        h(
-                            "table",
-                            {
-                                class: {
-                                    "woo-table": true
-                                },
-                                attrs: {
-                                    cellspacing: 0,
-                                    cellpadding: 0,
-                                    border: 0
-                                }
-                            },
-                            [
-                                h(
-                                    "w-table-colgroup",
-                                    {
-                                        attrs:{
-                                            columns:this.columnsLayout.colgroup
-                                        }
-                                    }
-                                ),
-                                h(
-                                    "WTableBodyGroup",
-                                    {
-                                        attrs:{
-                                            dataSource:this.localDataSource,
-                                            columns:this.columnsLayout.colgroup,
-                                            rowKey: this.rowKey,
-                                            selection:this.selection
-                                        }
-                                    }
-                                )
-                            ]
-                        )
-                    ]
+                    {},
+                    "page"
                 )
             ]
         );

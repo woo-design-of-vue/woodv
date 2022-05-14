@@ -1,5 +1,6 @@
 import WCheckbox from "../../checkbox";
-
+import WTableSorter from "./table-sorter";
+import {getTitleNode} from "../../../util/function/build-table";
 export default {
     name: "WTableTh",
     props:{
@@ -22,11 +23,13 @@ export default {
         }
     },
     components:{
-        WCheckbox
+        WCheckbox,
+        WTableSorter
     },
     render: function (h) {
         const column = this.column;
 
+        console.log(column, 9527);
         return h(
             "th",
             {
@@ -63,7 +66,9 @@ export default {
                             }
                         }
                     }
-                ):column.title
+                ):getTitleNode(column, h, ()=>{
+                    this.$parent.$parent.changeSorter(column);
+                })
             ]
         );
     }

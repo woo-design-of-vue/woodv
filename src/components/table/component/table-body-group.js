@@ -17,6 +17,11 @@ export default {
             dataSourceMap:{}
         };
     },
+    watch:{
+        dataSource(){
+            this.dataSourceMap = sortDataSourceMap(this.dataSource);
+        }
+    },
     created(){
         this.dataSourceMap = sortDataSourceMap(this.dataSource);
     },
@@ -61,8 +66,7 @@ export default {
                     }
                 }else{
                     item.wooTableIsShow = true;
-                    this.dataSourceMap[item.wooTableIndex] = item;
-                    this.dataSource.splice(Number(index)+Number(childIndex)+1, 0, this.dataSourceMap[item.wooTableIndex]);
+                    this.dataSource.splice(Number(index)+Number(childIndex)+1, 0, item);
                 }
             }
         }
