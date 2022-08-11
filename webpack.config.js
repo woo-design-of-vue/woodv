@@ -1,33 +1,53 @@
-const { CleanWebpackPlugin }  = require("clean-webpack-plugin");
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
+const htmlWebpackPlugin = require("html-webpack-plugin");
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 //使用node的模块
 
 module.exports = {
-    //这就是我们项目编译的入口文件
-    entry: "./src/index.js",
+    entry: path.join(__dirname, "./src/index.js"),
     output: {
-        filename: "[name].chunkhash.bundle.js",
-        chunkFilename: "[name]/[name].chunkhash.bundle.js",
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve(__dirname, "./dist"),
+        filename: "[name].js"
     },
     resolve: {
-        extensions: [".js"]
+        extensions: [".js", ".json", ".css"],
     },
-    module:{
-        rules: [{
-            test: /\.less$/,
-            use: ["style-loader", "css-loader", "less-loader"]
-        }],
+    module: {
+        rules: [
+            {
+                test: /\.(less|css)$/,
+                use: [
+                    {loader: MiniCssExtractPlugin.loader},
+                    {loader: "css-loader"},
+                    { loader: "less-loader" }
+                ]
+            }, {
+                test: /\.(js|jsx)$/,
+                loader: "babel-loader"
+            }
+        ],
     },
-    devServer:{
-        static:"./dist",
-        port: 8081
+    devServer: {
+        port: 8081,
+        host: "0.0.0.0"
     },
-    //这里就是一些插件
-    plugins:[
-        new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: ["./dist"]
-        })
+    devtool: "source-map",
+    optimization: {
+        chunkIds: "named",
+    },
+    plugins: [
+        new htmlWebpackPlugin({
+            filename: "index.html",
+            template: "./src/index.html",
+            scriptLoading:""
+        }),
+        new CleanWebpackPlugin(),
+        new UglifyJSPlugin({
+            sourceMap: true,
+        }),
+        new MiniCssExtractPlugin()
     ],
     mode: "production"
 };

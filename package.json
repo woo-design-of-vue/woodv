@@ -6,6 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "serve": "babel src --out-dir ./woodv-vue/src/woodv --copy-files  --watch",
+        "dev": "webpack-dev-server --mode development",
         "build": "babel src --out-dir ./dist --copy-files"
     },
     "keywords": [],
@@ -17,14 +18,20 @@
         "@babel/eslint-parser": "^7.12.16",
         "@babel/preset-env": "^7.16.11",
         "babel-eslint": "^10.1.0",
+        "babel-loader": "^8.2.5",
         "clean-webpack-plugin": "^4.0.0",
         "cross-env": "^7.0.3",
         "css-loader": "^6.7.1",
         "eslint": "^7.32.0",
+        "html-webpack-plugin": "^5.5.0",
         "less": "^4.1.2",
         "less-loader": "^10.2.0",
+        "mini-css-extract-plugin": "^2.6.0",
         "moment": "^2.29.1",
         "style-loader": "^3.3.1",
+        "uglifyjs-webpack-plugin": "^2.2.0",
+        "url-loader": "^4.1.1",
+        "webpack": "^5.72.1",
         "webpack-cli": "^4.9.2",
         "webpack-dev-server": "^4.7.4"
     },

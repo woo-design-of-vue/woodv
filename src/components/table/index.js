@@ -3,11 +3,13 @@ import {buildRowAndColSpan, getColumnsLevel, sortDataSource} from "../../util/fu
 import WTableColgroup from "./component/table-colgroup";
 import WTableHeaderTr from "./component/table-header-tr";
 import WTableBodyGroup from "./component/table-body-group";
+import WPage from "../page";
 export default {
     name: "WTable",
     data(){
         return{
             localDataSource:[],
+            initialDataSource:[],
             localColumns:[],
             columnsLayout:{
                 colgroup:[],
@@ -16,7 +18,8 @@ export default {
                 tableTrGroup:[]
             },
             checkedMap:{},
-            isHeaderChecked:false
+            isHeaderChecked:false,
+
         };
     },
     props: {
@@ -42,7 +45,7 @@ export default {
         height: {
             type: [String, Number],
             required: false,
-            default: ""
+            default: "600"
         },
         rowKey: {
             type: String,
@@ -67,17 +70,19 @@ export default {
         pagination:{
             type: [Boolean, Object],
             required: false,
-            default: true
+            default: false
         }
     },
     components:{
         WTableColgroup,
         WTableHeaderTr,
-        WTableBodyGroup
+        WTableBodyGroup,
+        WPage
     },
     watch:{
         dataSource(value){
-            this.localDataSource = sortDataSource(this.children,  JSON.parse(JSON.stringify(value)));
+            this.initialDataSource = sortDataSource(this.children,  JSON.parse(JSON.stringify(value)));
+            this.filterDataSourceByPage();
         },
         columns(){
             this.loadColumnsLayout();
@@ -85,7 +90,8 @@ export default {
     },
     beforeCreate(){
         this.$nextTick(()=>{
-            this.localDataSource = sortDataSource(this.children, JSON.parse(JSON.stringify(this.dataSource)));
+            this.initialDataSource = sortDataSource(this.children, JSON.parse(JSON.stringify(this.dataSource)));
+            this.filterDataSourceByPage();
             this.loadColumnsLayout();
         });
     },
@@ -173,6 +179,19 @@ export default {
                 e.wooTableSorterStatus = 1;
                 this.localDataSource = localDataSource;
             }
+        },
+        filterDataSourceByPage(){
+            if((this.pagination.total > this.initialDataSource.length) && this.pagination.size === this.initialDataSource.length){
+                this.localDataSource = JSON.parse(JSON.stringify(this.initialDataSource));
+            }else{
+                if(this.pagination){
+                    this.localDataSource =  JSON.parse(JSON.stringify(this.initialDataSource)).slice((this.pagination.current-1) * this.pagination.size, this.pagination.current * this.pagination.size);
+                }else{
+                    this.localDataSource = JSON.parse(JSON.stringify(this.initialDataSource));
+                }
+            }
+            this.isHeaderChecked =  false;
+            this.checkedMap = {};
         }
     },
     mounted() {
@@ -192,7 +211,6 @@ export default {
         }
     },
     render: function (h) {
-
         return h(
             "div",
             {
@@ -214,9 +232,6 @@ export default {
                         },
                         ref: "woo-table-group",
                         on: {
-                            load: (e) => {
-                                console.log(e);
-                            },
                             scroll: (e) => {
                                 if (e.target.scrollLeft > 0) {
                                     e.target.classList.add("woo-table-group-fixed-start");
@@ -324,11 +339,20 @@ export default {
                         )
                     ]
                 ),
-                h(
-                    "div",
-                    {},
-                    "page"
-                )
+                this.pagination?h(
+                    "WPage",
+                    {
+                        on:{
+                            change:(e)=>{
+                                this.filterDataSourceByPage();
+                                this.$emit("pageChange", e);
+                            }
+                        },
+                        attrs: {
+                            pagination: this.pagination
+                        }
+                    }
+                ):[]
             ]
         );
     }
