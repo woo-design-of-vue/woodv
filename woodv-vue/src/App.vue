@@ -93,7 +93,7 @@
                 </w-checkbox-group>
             </div>
             <div class="rate" style="margin-top: 16px;">
-                <w-rate v-model="rate" color="pink" text="menu" size="32" allowHalf></w-rate>
+                <w-rate v-model="rate" color="pink" text="rate" size="32" allowHalf></w-rate>
             </div>
 
             <div class="textarea" style="margin-top: 16px;">
@@ -108,7 +108,8 @@
                     selection
                     children
                     @selection="selectionChange"
-                    height="500px"
+                    :pagination="pagination"
+                    @pageChange="pageChange"
             >
                 <template #age="{text,row}">
                     <a href="">{{row.age}}</a>
@@ -123,6 +124,10 @@
                 </template>
             </w-table>
         </div>
+
+        <div class="select">
+            <w-select></w-select>
+        </div>
     </div>
 </template>
 
@@ -136,13 +141,13 @@
                 checkboxGroup: [1],
                 rate: 0,
                 textarea: "123456",
-                dataSource: Array.from(Array(50).keys()).map((item)=>{
+                dataSource: Array.from(Array(20).keys()).map((item)=>{
                     return {
                         id: 1,
                         name: "小鹿1"+item,
                         firstName:"小",
                         lastName:"鹿1"+item,
-                        age: 27,
+                        age: item,
                         sex: "男",
                         children:[
                             {
@@ -256,7 +261,8 @@
                         dataIndex: "lastName",
                         width: "200px",
                         align: "left",
-                        fixed:"start"
+                        fixed:"start",
+                        sorter:"firstName",
                     },
                     {
                         dataIndex: "age",
@@ -264,6 +270,7 @@
                         width: "200px",
                         slots: "age",
                         fixed:"start",
+                        sorter:"age",
                         children:[
                             {
                                 dataIndex: "age",
@@ -285,8 +292,7 @@
                         dataIndex: "age",
                         title: "年龄",
                         width: "200px",
-                        slots: "age",
-                        fixed:"start"
+                        slots: "age"
                     },
                     {
                         dataIndex: "age",
@@ -306,7 +312,13 @@
                         slots: "action",
                         fixed:"end"
                     },
-                ]
+                ],
+                pagination:{
+                    size:10,
+                    current:1,
+                    options: ["10", "60", "30"],
+                    total: 20
+                }
             }
         },
         watch: {
@@ -349,6 +361,9 @@
             },
             selectionChange(v,k) {
                 console.log(v,k)
+            },
+            pageChange(e){
+                console.log(e)
             }
         }
     }

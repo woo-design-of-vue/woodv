@@ -289,6 +289,29 @@
   content: "";
   pointer-events: none;
 }
+.woo-table-sorter-group {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  cursor: pointer;
+}
+.woo-table-sorter-group .woo-table-sorter {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 12px;
+}
+.woo-table-sorter-group .woo-table-sorter .woo-table-sorter-span {
+  width: 10px;
+  height: 6px;
+}
+.woo-table-sorter-group-up .woo-table-sorter-span-up svg {
+  fill: #009688;
+}
+.woo-table-sorter-group-down .woo-table-sorter-span-down svg {
+  fill: #009688;
+}
 .woo-table-group-fixed-end .woo-table-fixed-end:after {
   box-shadow: inset -10px 0 8px -8px #00000026;
   position: absolute;
