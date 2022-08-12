@@ -29,7 +29,6 @@ export default {
     render: function (h) {
         const column = this.column;
 
-        console.log(column, 9527);
         return h(
             "th",
             {

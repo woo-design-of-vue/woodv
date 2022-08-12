@@ -9,6 +9,7 @@ import Textarea from "./components/textarea";
 import Table from "./components/table";
 import Page from "./components/page";
 import Select from "./components/select";
+import SelectOption from "./components/select-option";
 const components = [
     Input,
     Icon,
@@ -19,7 +20,8 @@ const components = [
     Textarea,
     Table,
     Page,
-    Select
+    Select,
+    SelectOption
 ];
 
 const install = function(Vue) {

@@ -125,8 +125,14 @@
             </w-table>
         </div>
 
-        <div class="select">
-            <w-select></w-select>
+        <div class="select" style="height: 600px;">
+            <w-select
+                    placeholder="选择"
+                    v-model="selectValue"
+                    @change="selectChange"
+            >
+                <w-select-option :value="item.value" v-for="(item,index) in selectOptions" :key="index">{{item.label}}</w-select-option>
+            </w-select>
         </div>
     </div>
 </template>
@@ -139,8 +145,51 @@
                 value: "d1as23d1sa32d",
                 checkbox: false,
                 checkboxGroup: [1],
-                rate: 0,
+                rate: 1,
                 textarea: "123456",
+                selectValue:111,
+                selectOptions:[
+                    {
+                        label:"全部",
+                        value:""
+                    },
+                    {
+                        label:"小鹿1",
+                        value:1
+                    },
+                    {
+                        label:"小鹿2",
+                        value:2
+                    },
+                    {
+                        label:"小鹿3",
+                        value:3
+                    },
+                    {
+                        label:"小鹿3",
+                        value:4
+                    },
+                    {
+                        label:"小鹿5",
+                        value:5
+                    },
+                    {
+                        label:"小鹿3",
+                        value:6
+                    },
+                    {
+                        label:"小鹿3",
+                        value:7
+                    },
+                    {
+                        label:"小鹿3",
+                        value:8
+                    },
+                    {
+                        label:"小鹿3",
+                        value:9
+                    }
+                ],
                 dataSource: Array.from(Array(20).keys()).map((item)=>{
                     return {
                         id: 1,
@@ -354,7 +403,19 @@
                 this.checkboxGroup = [1, 2, 3];
                 this.rate = 4;
                 this.textarea = "951357";
-
+                this.selectOptions = [
+                    {
+                        label:"全部",
+                        value:""
+                    },
+                    {
+                        label:"小鹿111",
+                        value:111
+                    },
+                ]
+            },
+            selectChange(e){
+                console.log(e,"select");
             },
             checkboxGroupChange(e) {
                 console.log(e, "checkboxGroup")

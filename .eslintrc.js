@@ -24,5 +24,6 @@ module.exports = {
         "prefer-const": 1, //优选const
         "camelcase": 1, //强制驼峰法命名
         "newline-after-var": 1, //变量声明后是否需要空一行
+        "strict": 2
     }
 };

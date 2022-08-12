@@ -9,8 +9,18 @@ export default {
             offsetY:0,
             offsetWidth:0,
             isExceedX:false,
-            isExceedY:false
+            isExceedY:false,
+            model:{
+                value:""
+            },
+            label:"",
+            localOptions:[]
         };
+    },
+    provide(){
+      return{
+          provideValue:this.model
+      }
     },
     model: {
         prop: "value",
@@ -22,29 +32,54 @@ export default {
             required: false,
             default: 0
         },
+        options:{
+            type:Array,
+            required:false,
+            default:()=>[]
+        },
         disabled: {
             type: Boolean,
             required: false,
             default: false
         },
+        placeholder: {
+            type: String,
+            required: false,
+            default: ""
+        },
         appendParent:{
             type:Function,
             required:false,
-            // eslint-disable-next-line no-undef
             default:()=>{
+                // eslint-disable-next-line no-undef
                 return document.body;
             }
         },
     },
-    methods: {
-        change(e) {
-            this.$emit("change", e.target.value);
+    watch:{
+        "value"(){
+            this.model.value = this.value;
+        },
+        options(){
+            this.init();
         }
     },
-    mounted(){
-
+    created(){
+        this.model.value = this.value;
     },
+
     render: function (h) {
+        this.$slots.default.map(item=>{
+            if(item.componentOptions.propsData.value === this.value){
+                this.label = item.componentOptions?.children[0]?.text || ""
+            }
+            item.componentOptions.listeners = {
+                selectSelected:(e)=>{
+                    this.$emit("change",e);
+                    this.visible = false;
+                }
+            };
+        });
         return h(
             "div",
             {
@@ -52,15 +87,16 @@ export default {
                     "woo-select": true
                 },
                 on:{
-                    click:(e)=>{
-                        console.log(e);
-                        this.offsetX = e.target.offsetLeft;
-                        this.isExceedY =this.appendParent().offsetHeight <= e.target.offsetTop + e.target.offsetHeight;
-                        this.offsetWidth = e.target.offsetWidth;
+                    click:()=>{
+                        const el = this.$el;
+
+                        this.offsetX = el.offsetLeft;
+                        this.isExceedY =this.appendParent().offsetHeight <= el.offsetTop + el.offsetHeight;
+                        this.offsetWidth = el.offsetWidth;
                         if(this.isExceedY){
-                            this.offsetY = e.target.offsetTop;
+                            this.offsetY = el.offsetTop;
                         }else{
-                            this.offsetY = e.target.offsetTop + e.target.offsetHeight;
+                            this.offsetY = el.offsetTop + el.offsetHeight;
                         }
                         this.visible = !this.visible;
                     }
@@ -72,23 +108,25 @@ export default {
                     {
                         class: {
                             "woo-select-group": true
-                        },
+                        }
                     },
                     [
                         h(
                             "div",
                             {
                                 class: {
-                                    "woo-select-value": true
+                                    "woo-select-label": true,
+                                    "woo-select-placeholder":!!!this.label
                                 },
                             },
-                            ["value"]
+                            [this.label || this.placeholder]
                         ),
                         h(
                             "span",
                             {
                                 class:{
-                                    "material-icons":true
+                                    "material-icons":true,
+                                    "woo-select-icon-open":this.visible
                                 },
                                 style:{
                                     fontSize:"24px",
@@ -110,7 +148,26 @@ export default {
                             offsetWidth:this.offsetWidth,
                             isExceedY:this.isExceedY
                         }
-                    }
+                    },
+                    [
+                        h(
+                            "div",
+                            {
+                                class:{
+                                    "woo-select-option-group":true
+                                }
+                            },
+                            this.$slots.default.map(item=>{
+                                item.componentOptions.listeners = {
+                                    selectSelected:(e)=>{
+                                        this.$emit("change",e);
+                                        this.visible = false;
+                                    }
+                                };
+                                return item
+                            })
+                        )
+                    ]
                 )
             ]
         );

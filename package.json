@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "serve": "babel src --out-dir ./woodv-vue/src/woodv --copy-files  --watch",
         "dev": "webpack-dev-server --mode development",
-        "build": "babel src --out-dir ./dist --copy-files"
+        "build": "webpack"
     },
     "keywords": [],
     "author": "",
@@ -19,6 +19,7 @@
         "@babel/preset-env": "^7.16.11",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.2.5",
+        "babel-runtime": "^6.26.0",
         "clean-webpack-plugin": "^4.0.0",
         "cross-env": "^7.0.3",
         "css-loader": "^6.7.1",
@@ -36,7 +37,6 @@
         "webpack-dev-server": "^4.7.4"
     },
     "dependencies": {
-        "material-design-icons-iconfont": "^6.5.0",
-        "vue": "^2.6.14"
+        "material-design-icons-iconfont": "^6.5.0"
     }
 }

@@ -6,11 +6,6 @@ export default {
         event: "change"
     },
     props: {
-        options:{
-            type:Array,
-            required:false,
-            default:()=>{}
-        },
         offsetX:{
             type:Number,
             required:true,
@@ -52,29 +47,44 @@ export default {
     methods: {
 
     },
+    updated(){
+        if(this.$refs["woo-drop-body"]){
+            this.$nextTick(()=>{
+                if(this.$slots.default.length){
+                    const dropActive = this.$slots.default[0].children.find(item=>item.elm.id === "woo-select-drop-active");
+
+                    if(dropActive){
+                        this.$refs["woo-drop-body"].scroll(0, dropActive.elm.offsetTop - this.$refs["woo-drop-body"].offsetHeight / 2);
+                    }
+                }
+            });
+
+        }
+    },
     render: function (h) {
         if(this.visible){
             return h(
                 "div",
                 {
+                    class:{
+                        "woo-drop":true
+                    },
                     style:{
-                        position:"absolute",
                         top:this.offsetY +(this.isExceedY? -this.$el.offsetHeight-10:10)+ "px",
                         width:this.offsetWidth + "px",
-                        left:this.offsetX + "px",
-                        zIndex:999
+                        left:this.offsetX + "px"
                     }
                 },
                 [
                     h(
                         "div",
                         {
-                            style:{
-                                height:"200px",
-                                boxShadow:"0 0 5px rgba(0,0,0,.3)"
-                            }
+                            class:{
+                                "woo-drop-body":true
+                            },
+                            ref:"woo-drop-body"
                         },
-                        ["123"]
+                        this.$slots.default
                     )
                 ]
             );
