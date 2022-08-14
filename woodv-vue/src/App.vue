@@ -130,6 +130,25 @@
                     placeholder="选择"
                     v-model="selectValue"
                     @change="selectChange"
+
+            >
+                <w-select-option :value="item.value" v-for="(item,index) in selectOptions" :key="index">{{item.label}}</w-select-option>
+            </w-select>
+
+            <w-select
+                    placeholder="选择"
+                    v-model="selectValue"
+                    @change="selectChange"
+
+            >
+                <w-select-option :value="item.value" v-for="(item,index) in selectOptions" :key="index">{{item.label}}</w-select-option>
+            </w-select>
+
+            <w-select
+                    placeholder="选择"
+                    v-model="selectValue"
+                    @change="selectChange"
+
             >
                 <w-select-option :value="item.value" v-for="(item,index) in selectOptions" :key="index">{{item.label}}</w-select-option>
             </w-select>
@@ -147,7 +166,7 @@
                 checkboxGroup: [1],
                 rate: 1,
                 textarea: "123456",
-                selectValue:111,
+                selectValue:122,
                 selectOptions:[
                     {
                         label:"全部",
@@ -159,7 +178,7 @@
                     },
                     {
                         label:"小鹿2",
-                        value:2
+                        value:1
                     },
                     {
                         label:"小鹿3",

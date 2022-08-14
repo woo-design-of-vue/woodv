@@ -1,5 +1,6 @@
 import "material-design-icons-iconfont";
 import WDrop from "../drop";
+import SelectOption from "../select-option"
 export default {
     name: "WSelect",
     data(){
@@ -59,37 +60,71 @@ export default {
     watch:{
         "value"(){
             this.model.value = this.value;
-        },
-        options(){
-            this.init();
         }
+    },
+    mounted(){
+
     },
     created(){
         this.model.value = this.value;
+        this.label = this.value;
     },
-
+    methods:{
+        closeVisible(){
+            this.visible=false;
+        }
+    },
     render: function (h) {
-        this.$slots.default.map(item=>{
-            if(item.componentOptions.propsData.value === this.value){
-                this.label = item.componentOptions?.children[0]?.text || ""
-            }
-            item.componentOptions.listeners = {
-                selectSelected:(e)=>{
-                    this.$emit("change",e);
-                    this.visible = false;
+        let slots = [];
+        let isFilterLabel = false;
+        if(this.options.length){
+            slots = this.options.map(item=>{
+                if(item.value === this.value && !isFilterLabel){
+                    this.label = item.label;
+                    isFilterLabel = true;
                 }
-            };
-        });
+                return h(
+                    SelectOption,
+                    {
+                        attrs:{
+                            value:item.value
+                        },
+                        on:{
+                            selectSelected:(e)=>{
+                                this.$emit("change",e);
+                                this.visible = false;
+                            }
+                        }
+
+                    },
+                    [item.label]
+                )
+            })
+        }else{
+            this.$slots.default.map(item=>{
+                if(item.componentOptions.propsData.value === this.value&& !isFilterLabel){
+                    this.label = item.componentOptions?.children[0]?.text || "";
+                    isFilterLabel = true;
+                }
+                item.componentOptions.listeners = {
+                    selectSelected:(e)=>{
+                        this.$emit("change",e);
+                        this.visible = false;
+                    }
+                };
+            });
+            slots = this.$slots.default;
+        }
+
         return h(
             "div",
             {
                 class: {
-                    "woo-select": true
+                    "woo-select": true,
                 },
                 on:{
                     click:()=>{
                         const el = this.$el;
-
                         this.offsetX = el.offsetLeft;
                         this.isExceedY =this.appendParent().offsetHeight <= el.offsetTop + el.offsetHeight;
                         this.offsetWidth = el.offsetWidth;
@@ -147,6 +182,9 @@ export default {
                             offsetY:this.offsetY,
                             offsetWidth:this.offsetWidth,
                             isExceedY:this.isExceedY
+                        },
+                        on:{
+                            closeVisible:this.closeVisible
                         }
                     },
                     [
@@ -157,15 +195,7 @@ export default {
                                     "woo-select-option-group":true
                                 }
                             },
-                            this.$slots.default.map(item=>{
-                                item.componentOptions.listeners = {
-                                    selectSelected:(e)=>{
-                                        this.$emit("change",e);
-                                        this.visible = false;
-                                    }
-                                };
-                                return item
-                            })
+                            slots
                         )
                     ]
                 )

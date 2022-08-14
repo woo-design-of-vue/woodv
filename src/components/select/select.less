@@ -15,9 +15,24 @@
         .woo-select-placeholder{
             color: #bfbfbf;
         }
+        .woo-select-label{
+            flex: 1 1 auto;
+            text-align: left;
+            overflow: auto;
+            white-space: nowrap;
+            user-select: none;
+            &::-webkit-scrollbar {
+                /*滚动条整体样式*/
+                width: 0;
+                /*高宽分别对应横竖滚动条的尺寸*/
+                height: 0;
+            }
+        }
+        .material-icons{
+            transition: .3s all;
+        }
         .woo-select-icon-open{
             transform: rotate(180deg);
-            transition: .5s all;
         }
     }
 }

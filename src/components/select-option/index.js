@@ -22,7 +22,7 @@ export default {
 
                 class: {
                     "woo-select-option-item":true,
-                    "woo-select-option-item-active":this.value === this.provideValue.value
+                    "woo-select-option-item-active":this.value === this.provideValue.value,
                 },
                 attrs:{
                     id:this.value === this.provideValue.value?"woo-select-drop-active":""

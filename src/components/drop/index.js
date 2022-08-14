@@ -44,11 +44,9 @@ export default {
         // eslint-disable-next-line no-undef
         this.appendParent().appendChild(this.$mount().$el);
     },
-    methods: {
-
-    },
     updated(){
         if(this.$refs["woo-drop-body"]){
+            this.$refs["woo-drop-body"].focus();
             this.$nextTick(()=>{
                 if(this.$slots.default.length){
                     const dropActive = this.$slots.default[0].children.find(item=>item.elm.id === "woo-select-drop-active");
@@ -73,16 +71,27 @@ export default {
                         top:this.offsetY +(this.isExceedY? -this.$el.offsetHeight-10:10)+ "px",
                         width:this.offsetWidth + "px",
                         left:this.offsetX + "px"
-                    }
+                    },
                 },
                 [
                     h(
                         "div",
                         {
+                            attrs:{
+                                tabindex:"1"
+                            },
                             class:{
                                 "woo-drop-body":true
                             },
-                            ref:"woo-drop-body"
+                            ref:"woo-drop-body",
+                            on:{
+                                blur:()=>{
+                                    console.log("blur");
+                                    setTimeout(()=>{
+                                        this.$emit("closeVisible");
+                                    });
+                                }
+                            },
                         },
                         this.$slots.default
                     )
